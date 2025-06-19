@@ -70,11 +70,10 @@ export default function Home() {
               className="btn-primary bg-tertiary text-primary hover:bg-opacity-90"
             >
               Comenzar Ahora
-            </a>
-            <!-- 
+            </a> 
             <button className="btn-secondary bg-transparent border-2 border-white text-white hover:text-primary">
               Ver Demo
-            </button>  -->
+            </button>
           </div>
         </div>
       </section>
