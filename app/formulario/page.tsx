@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import ReCAPTCHA from "react-google-recaptcha";
 import { useMultiStepForm } from "../../hooks/useMultiStepForm";
 import { FormField, FormStep } from "../../components/FormField";
 import { ProgressIndicator } from "../../components/ProgressIndicator";
