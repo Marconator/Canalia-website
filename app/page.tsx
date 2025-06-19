@@ -45,7 +45,7 @@ export default function Home() {
               </a>
             </nav>
             <a href="/formulario" className="btn-primary">
-              Solicitar Demo
+              Quiero automatizarme
             </a>
           </div>
         </div>
@@ -71,9 +71,10 @@ export default function Home() {
             >
               Comenzar Ahora
             </a>
+            <!-- 
             <button className="btn-secondary bg-transparent border-2 border-white text-white hover:text-primary">
               Ver Demo
-            </button>
+            </button>  -->
           </div>
         </div>
       </section>
