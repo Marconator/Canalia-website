@@ -364,7 +364,7 @@ export default function Home() {
               <h4 className="text-lg font-semibold mb-4">Contacto</h4>
               <div className="space-y-2 text-gray-300">
                 <p>contacto@canaliasolutions.com</p>
-                <p>+34 900 123 456</p>
+                {/* <p>+34 900 123 456</p> */}
                 <p>Disponible 24/7</p>
               </div>
             </div>
