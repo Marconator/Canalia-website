@@ -32,7 +32,7 @@ export default function FormularioPage() {
     resetForm,
   } = useMultiStepForm();
 
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
