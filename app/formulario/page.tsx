@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import ReCAPTCHA from "react-google-recaptcha";
 import { useMultiStepForm } from "../../hooks/useMultiStepForm";
 import { FormField, FormStep } from "../../components/FormField";
 import { ProgressIndicator } from "../../components/ProgressIndicator";
@@ -33,7 +32,7 @@ export default function FormularioPage() {
     resetForm,
   } = useMultiStepForm();
 
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -44,8 +43,10 @@ export default function FormularioPage() {
   };
 
   const handleSubmit = async () => {
-    if (!recaptchaToken) {
-      alert("Por favor completa el reCAPTCHA");
+    // Honeypot spam protection - if filled, it's likely a bot
+    if (honeypot.trim() !== "") {
+      console.log("Honeypot triggered - potential spam submission blocked");
+      alert("Error al enviar el formulario. Por favor intenta de nuevo.");
       return;
     }
 
@@ -61,7 +62,6 @@ export default function FormularioPage() {
 
       // Here you would typically send the data to your backend
       console.log("Form data:", formData);
-      console.log("reCAPTCHA token:", recaptchaToken);
 
       setIsSubmitted(true);
     } catch (error) {
@@ -457,18 +457,17 @@ export default function FormularioPage() {
               ]}
             />
 
-            {/* reCAPTCHA */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm font-semibold text-primary mb-4">
-                Verificación de seguridad
-              </p>
-              <ReCAPTCHA
-                sitekey={
-                  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-                  "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                }
-                onChange={setRecaptchaToken}
-                onExpired={() => setRecaptchaToken(null)}
+            {/* Honeypot field for spam protection - hidden from users */}
+            <div style={{ display: "none" }}>
+              <label htmlFor="website">Website (leave blank):</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                autoComplete="off"
+                tabIndex={-1}
               />
             </div>
           </FormStep>
@@ -515,7 +514,7 @@ export default function FormularioPage() {
                 onClick={() => {
                   setIsSubmitted(false);
                   resetForm();
-                  setRecaptchaToken(null);
+                  setHoneypot("");
                 }}
                 className="btn-secondary"
               >
@@ -589,10 +588,7 @@ export default function FormularioPage() {
             onNext={handleNext}
             onSubmit={handleSubmit}
             isSubmitting={isSubmitting}
-            canProceed={
-              currentStep < totalSteps - 1 ||
-              (currentStep === totalSteps - 1 && recaptchaToken !== null)
-            }
+            canProceed={true}
           />
         </div>
       </main>
