@@ -514,7 +514,7 @@ export default function FormularioPage() {
                 onClick={() => {
                   setIsSubmitted(false);
                   resetForm();
-                  setRecaptchaToken(null);
+                  setHoneypot("");
                 }}
                 className="btn-secondary"
               >
