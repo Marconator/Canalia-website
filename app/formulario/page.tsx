@@ -588,10 +588,7 @@ export default function FormularioPage() {
             onNext={handleNext}
             onSubmit={handleSubmit}
             isSubmitting={isSubmitting}
-            canProceed={
-              currentStep < totalSteps - 1 ||
-              (currentStep === totalSteps - 1 && recaptchaToken !== null)
-            }
+            canProceed={true}
           />
         </div>
       </main>
