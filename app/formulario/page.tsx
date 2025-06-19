@@ -457,18 +457,17 @@ export default function FormularioPage() {
               ]}
             />
 
-            {/* reCAPTCHA */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm font-semibold text-primary mb-4">
-                Verificación de seguridad
-              </p>
-              <ReCAPTCHA
-                sitekey={
-                  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-                  "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                }
-                onChange={setRecaptchaToken}
-                onExpired={() => setRecaptchaToken(null)}
+            {/* Honeypot field for spam protection - hidden from users */}
+            <div style={{ display: "none" }}>
+              <label htmlFor="website">Website (leave blank):</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                autoComplete="off"
+                tabIndex={-1}
               />
             </div>
           </FormStep>
