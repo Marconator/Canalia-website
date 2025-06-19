@@ -286,7 +286,7 @@ export default function Home() {
                     <div className="text-4xl font-bold text-secondary mb-2">
                       50+
                     </div>
-                    <p className="text-gray-600">Empresas automatizadas</p>
+                    <p className="text-gray-600">Flujos automatizados</p>
                   </div>
                   <div>
                     <div className="text-4xl font-bold text-secondary mb-2">
