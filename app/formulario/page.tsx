@@ -53,9 +53,7 @@ export default function FormularioPage() {
     setIsSubmitting(true);
 
     try {
-      const webhookUrl =
-        process.env.NEXT_PUBLIC_WEBHOOK_URL ||
-        "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
+      const webhookUrl = "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
 
       const response = await fetch(webhookUrl, {
         method: "POST",
