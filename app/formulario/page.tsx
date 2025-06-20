@@ -141,6 +141,7 @@ export default function FormularioPage() {
                 onChange={(value) =>
                   updateFormData({ businessAreasOther: value as string })
                 }
+                error={errors.businessAreasOther}
                 placeholder="Especifica otra área..."
                 required
               />
