@@ -9,14 +9,11 @@ import { FormNavigation } from "../../components/FormNavigation";
 
 const stepTitles = [
   "Datos Generales",
-  "Descubrimiento General",
-  "Análisis del Flujo de Trabajo",
-  "Aspectos Técnicos e Integración",
-  "Puntos de Dolor y Métricas",
-  "Resultados Deseados",
-  "Plazos y Presupuesto",
-  "Riesgos y Preocupaciones",
-  "Compatibilidad y Colaboración",
+  "Tu realidad actual",
+  "Cómo trabajas hoy",
+  "Nivel técnico y operatividad",
+  "Prioridad y etapa del proyecto",
+  "Tipo de servicio ideal",
 ];
 
 export default function FormularioPage() {
@@ -42,10 +39,214 @@ export default function FormularioPage() {
     }
   };
 
+  const transformFormDataForSubmission = () => {
+    // Define option mappings for readable labels
+    const optionMappings = {
+      businessAreas: {
+        "gestion-clientes": "Gestión de clientes",
+        contabilidad: "Contabilidad",
+        "tareas-internas": "Tareas internas",
+        "soporte-cliente": "Soporte al cliente",
+        produccion: "Producción",
+        ventas: "Ventas",
+        otro: "Otro",
+      },
+      repetitiveTasks: {
+        "enviar-correos": "Enviar correos",
+        "agendar-citas": "Agendar citas",
+        "generar-reportes": "Generar reportes",
+        "crear-facturas": "Crear facturas",
+        "asignar-tareas": "Asignar tareas",
+        otro: "Otro",
+      },
+      automationGoal: {
+        "ahorrar-tiempo": "Ahorrar tiempo",
+        "reducir-errores": "Reducir errores",
+        "escalar-negocio": "Escalar el negocio",
+        "liberar-equipo": "Liberar al equipo para tareas estratégicas",
+        "mejorar-experiencia": "Mejorar experiencia del cliente",
+        otro: "Otro",
+      },
+      currentTools: {
+        crm: "CRM (Ej: HubSpot, Zoho)",
+        erp: "ERP (Ej: SAP, Odoo)",
+        "hojas-calculo": "Hojas de cálculo",
+        correos: "Correos electrónicos",
+        "apps-mensajeria": "Apps de mensajería (Ej: WhatsApp, Slack)",
+        otro: "Otro",
+      },
+      manualTasks: {
+        si: "Sí",
+        no: "No",
+      },
+      previousAutomation: {
+        "si-funciono": "Sí, lo hemos intentado y funcionó bien",
+        "si-no-funciono": "Sí, lo intentamos pero no salió como esperábamos",
+        "no-interesados": "No, pero estamos interesados",
+        "no-considerado": "No, y no lo habíamos considerado",
+        "no-seguro": "No estoy seguro",
+      },
+      systemIntegrations: {
+        "si-api": "Sí, permiten conexiones (API)",
+        "si-webhooks": "Sí, envían datos automáticamente (Webhooks)",
+        "si-ambos": "Sí, ambas cosas",
+        "no-seguro": "No estoy seguro",
+        no: "No, no se pueden conectar",
+      },
+      systemArchitecture: {
+        nube: "Por internet (en la nube)",
+        local: "Están instalados en computadoras/servidores propios",
+        mixto: "Es una mezcla de ambos",
+        "no-seguro": "No estoy seguro",
+      },
+      technicalTeam: {
+        desarrolladores: "Sí, hay desarrolladores (programadores)",
+        "equipo-ti": "Sí, tenemos equipo de sistemas/TI",
+        ambos: "Sí, ambos",
+        "ayuda-externa": "Solo tenemos ayuda externa",
+        nadie: "No tenemos a nadie técnico",
+      },
+      securityConcerns: {
+        importante: "Sí, es un tema importante para nosotros",
+        interesa: "No especialmente, pero nos interesa hacerlo bien",
+        "no-preocupa": "No, no es algo que nos preocupe mucho",
+        "no-seguro": "No estoy seguro",
+      },
+      urgency: {
+        "muy-urgente": "Muy urgente",
+        pronto: "Me gustaría resolverlo pronto",
+        "importante-no-urgente": "Es importante, pero no urgente",
+        explorando: "Solo estoy explorando",
+      },
+      projectTimeline: {
+        inmediatamente: "Inmediatamente",
+        "1-mes": "En el próximo mes",
+        "2-3-meses": "En 2-3 meses",
+        "6-meses": "En 6 meses",
+        explorando: "Solo estoy explorando opciones",
+      },
+      servicePreference: {
+        "configuracion-inicial": "Solo quiero una configuración inicial",
+        "soporte-continuo": "Me interesa tener soporte y ajustes continuos",
+        mixto: "Quiero una mezcla de ambos",
+        "no-claro": "Aún no lo tengo claro",
+      },
+    };
+
+    // Transform array fields with proper handling of "otro"
+    const transformArrayField = (
+      fieldName: string,
+      values: string[],
+      otherValue: string,
+    ) => {
+      const mappings = optionMappings[fieldName] || {};
+      const transformedValues = values.map((value) => mappings[value] || value);
+
+      // If "otro" is selected and there's a custom value, replace "Otro" with the custom text
+      if (values.includes("otro") && otherValue.trim()) {
+        const otroIndex = transformedValues.findIndex((v) => v === "Otro");
+        if (otroIndex !== -1) {
+          transformedValues[otroIndex] = `Otro: ${otherValue}`;
+        }
+      }
+
+      return transformedValues;
+    };
+
+    // Transform single value fields with "otro" handling
+    const transformSingleField = (
+      fieldName: string,
+      value: string,
+      otherValue: string,
+    ) => {
+      const mappings = optionMappings[fieldName] || {};
+      if (value === "otro" && otherValue.trim()) {
+        return `Otro: ${otherValue}`;
+      }
+      return mappings[value] || value;
+    };
+
+    return {
+      "Nombre del negocio": formData.businessName,
+      "Nombre de contacto": formData.contactName,
+      "Correo electrónico": formData.contactEmail,
+      "Áreas de negocio que consumen más tiempo": transformArrayField(
+        "businessAreas",
+        formData.businessAreas,
+        formData.businessAreasOther,
+      ),
+      "Tareas repetitivas frecuentes": transformArrayField(
+        "repetitiveTasks",
+        formData.repetitiveTasks,
+        formData.repetitiveTasksOther,
+      ),
+      "Objetivos de automatización": transformArrayField(
+        "automationGoal",
+        formData.automationGoal,
+        formData.automationGoalOther,
+      ),
+      "Herramientas actuales": transformArrayField(
+        "currentTools",
+        formData.currentTools,
+        formData.currentToolsOther,
+      ),
+      "¿Hay tareas manuales a automatizar?": transformSingleField(
+        "manualTasks",
+        formData.manualTasks,
+        "",
+      ),
+      "Descripción de tareas manuales":
+        formData.manualTasksDescription || "No aplica",
+      "Experiencia previa con automatización": transformSingleField(
+        "previousAutomation",
+        formData.previousAutomation,
+        "",
+      ),
+      "¿Los sistemas pueden conectarse automáticamente?": transformSingleField(
+        "systemIntegrations",
+        formData.systemIntegrations,
+        "",
+      ),
+      "Arquitectura de sistemas": transformSingleField(
+        "systemArchitecture",
+        formData.systemArchitecture,
+        "",
+      ),
+      "Equipo técnico disponible": transformSingleField(
+        "technicalTeam",
+        formData.technicalTeam,
+        "",
+      ),
+      "Preocupaciones de seguridad": transformSingleField(
+        "securityConcerns",
+        formData.securityConcerns,
+        "",
+      ),
+      "Urgencia del proyecto": transformSingleField(
+        "urgency",
+        formData.urgency,
+        "",
+      ),
+      "Cuándo iniciar el proyecto": transformSingleField(
+        "projectTimeline",
+        formData.projectTimeline,
+        "",
+      ),
+      "Preferencia de servicio": transformSingleField(
+        "servicePreference",
+        formData.servicePreference,
+        "",
+      ),
+      "Comentarios finales":
+        formData.finalComments || "Sin comentarios adicionales",
+      "Fecha de envío": new Date().toISOString(),
+      Fuente: "Formulario del sitio web",
+    };
+  };
+
   const handleSubmit = async () => {
     // Honeypot spam protection - if filled, it's likely a bot
     if (honeypot.trim() !== "") {
-      alert("Error al enviar el formulario. Por favor intenta de nuevo.");
       return;
     }
 
@@ -56,12 +257,25 @@ export default function FormularioPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const webhookUrl =
+        process.env.NEXT_PUBLIC_WEBHOOK_URL ||
+        "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
 
-      // Here you would typically send the data to your backend
-      console.log("Form data:", formData);
+      const transformedData = transformFormDataForSubmission();
 
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transformedData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log("Form data submitted successfully:", transformedData);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -80,17 +294,32 @@ export default function FormularioPage() {
               label="Nombre de su negocio"
               name="businessName"
               value={formData.businessName}
-              onChange={(value) => updateFormData({ businessName: value })}
+              onChange={(value) =>
+                updateFormData({ businessName: value as string })
+              }
               error={errors.businessName}
               placeholder="Ej: Empresa ABC S.A."
               required
             />
             <FormField
-              label="Correo de contacto"
+              label="Nombre de contacto"
+              name="contactName"
+              value={formData.contactName}
+              onChange={(value) =>
+                updateFormData({ contactName: value as string })
+              }
+              error={errors.contactName}
+              placeholder="Ej: Juan Pérez"
+              required
+            />
+            <FormField
+              label="Correo electrónico de contacto"
               name="contactEmail"
               type="email"
               value={formData.contactEmail}
-              onChange={(value) => updateFormData({ contactEmail: value })}
+              onChange={(value) =>
+                updateFormData({ contactEmail: value as string })
+              }
               error={errors.contactEmail}
               placeholder="ejemplo@empresa.com"
               required
@@ -100,162 +329,312 @@ export default function FormularioPage() {
 
       case 1:
         return (
-          <FormStep title="Descubrimiento General" icon="🔍">
+          <FormStep title="Tu realidad actual" icon="🔍">
             <FormField
-              label="¿Qué procesos de negocio consumen actualmente más tiempo o recursos?"
-              name="timeConsumingProcesses"
-              type="textarea"
-              value={formData.timeConsumingProcesses}
+              label="¿En qué áreas de tu negocio se invierte más tiempo o recursos actualmente?"
+              name="businessAreas"
+              type="checkbox"
+              value={formData.businessAreas}
               onChange={(value) =>
-                updateFormData({ timeConsumingProcesses: value })
+                updateFormData({ businessAreas: value as string[] })
               }
-              error={errors.timeConsumingProcesses}
-              placeholder="Describe los procesos que más tiempo consumen en tu empresa..."
+              error={errors.businessAreas}
               required
+              options={[
+                { value: "gestion-clientes", label: "Gestión de clientes" },
+                { value: "contabilidad", label: "Contabilidad" },
+                { value: "tareas-internas", label: "Tareas internas" },
+                { value: "soporte-cliente", label: "Soporte al cliente" },
+                { value: "produccion", label: "Producción" },
+                { value: "ventas", label: "Ventas" },
+                { value: "otro", label: "Otro" },
+              ]}
             />
+            {formData.businessAreas.includes("otro") && (
+              <FormField
+                label="Otro (especifica)"
+                name="businessAreasOther"
+                value={formData.businessAreasOther}
+                onChange={(value) =>
+                  updateFormData({ businessAreasOther: value as string })
+                }
+                error={errors.businessAreasOther}
+                placeholder="Especifica otra área..."
+                required
+              />
+            )}
+
             <FormField
-              label="¿Qué tareas o flujos de trabajo son repetitivos y basados en reglas?"
+              label="¿Y dentro de esas áreas, qué tareas repetitivas haces con frecuencia?"
               name="repetitiveTasks"
-              type="textarea"
+              type="checkbox"
               value={formData.repetitiveTasks}
-              onChange={(value) => updateFormData({ repetitiveTasks: value })}
+              onChange={(value) =>
+                updateFormData({ repetitiveTasks: value as string[] })
+              }
               error={errors.repetitiveTasks}
-              placeholder="Enumera las tareas repetitivas que realizas frecuentemente..."
               required
+              options={[
+                { value: "enviar-correos", label: "Enviar correos" },
+                { value: "agendar-citas", label: "Agendar citas" },
+                { value: "generar-reportes", label: "Generar reportes" },
+                { value: "crear-facturas", label: "Crear facturas" },
+                { value: "asignar-tareas", label: "Asignar tareas" },
+                { value: "otro", label: "Otro" },
+              ]}
             />
+            {formData.repetitiveTasks.includes("otro") && (
+              <FormField
+                label="Otro (especifica)"
+                name="repetitiveTasksOther"
+                value={formData.repetitiveTasksOther}
+                onChange={(value) =>
+                  updateFormData({ repetitiveTasksOther: value as string })
+                }
+                error={errors.repetitiveTasksOther}
+                placeholder="Especifica otra tarea..."
+                required
+              />
+            )}
+
             <FormField
-              label="¿Cuál es tu objetivo principal con la automatización?"
+              label="¿Qué te gustaría lograr al automatizar estos procesos?"
               name="automationGoal"
-              type="select"
+              type="checkbox"
               value={formData.automationGoal}
-              onChange={(value) => updateFormData({ automationGoal: value })}
+              onChange={(value) =>
+                updateFormData({ automationGoal: value as string[] })
+              }
               error={errors.automationGoal}
               required
               options={[
                 { value: "ahorrar-tiempo", label: "Ahorrar tiempo" },
                 { value: "reducir-errores", label: "Reducir errores" },
+                { value: "escalar-negocio", label: "Escalar el negocio" },
                 {
-                  value: "mejorar-escalabilidad",
-                  label: "Mejorar la escalabilidad",
+                  value: "liberar-equipo",
+                  label: "Liberar al equipo para tareas estratégicas",
                 },
-                { value: "reducir-costos", label: "Reducir costos" },
-                { value: "multiple", label: "Múltiples objetivos" },
+                {
+                  value: "mejorar-experiencia",
+                  label: "Mejorar experiencia del cliente",
+                },
+                { value: "otro", label: "Otro" },
               ]}
             />
+            {formData.automationGoal.includes("otro") && (
+              <FormField
+                label="Especifica tu objetivo"
+                name="automationGoalOther"
+                value={formData.automationGoalOther}
+                onChange={(value) =>
+                  updateFormData({ automationGoalOther: value as string })
+                }
+                error={errors.automationGoalOther}
+                placeholder="Describe tu objetivo..."
+                required
+              />
+            )}
           </FormStep>
         );
 
       case 2:
         return (
-          <FormStep title="Análisis del Flujo de Trabajo Actual" icon="🏗️">
+          <FormStep title="Cómo trabajas hoy" icon="⚙️">
             <FormField
-              label="¿Puedes explicarme uno de tus procesos típicos desde el inicio hasta el final?"
-              name="typicalProcess"
-              type="textarea"
-              value={formData.typicalProcess}
-              onChange={(value) => updateFormData({ typicalProcess: value })}
-              placeholder="Describe paso a paso un proceso típico de tu empresa..."
-            />
-            <FormField
-              label="¿Qué personas, roles o departamentos están involucrados en estos flujos de trabajo?"
-              name="involvedRoles"
-              type="textarea"
-              value={formData.involvedRoles}
-              onChange={(value) => updateFormData({ involvedRoles: value })}
-              placeholder="Ej: Ventas, Marketing, Atención al cliente, etc."
-            />
-            <FormField
-              label="¿Qué herramientas o plataformas utilizas actualmente para gestionar estos procesos?"
+              label="¿Qué herramientas usas actualmente para ejecutar estos procesos?"
               name="currentTools"
-              type="textarea"
+              type="checkbox"
               value={formData.currentTools}
-              onChange={(value) => updateFormData({ currentTools: value })}
-              placeholder="Ej: CRM, ERP, hojas de cálculo, etc."
+              onChange={(value) =>
+                updateFormData({ currentTools: value as string[] })
+              }
+              error={errors.currentTools}
+              required
+              options={[
+                { value: "crm", label: "CRM (Ej: HubSpot, Zoho)" },
+                { value: "erp", label: "ERP (Ej: SAP, Odoo)" },
+                { value: "hojas-calculo", label: "Hojas de cálculo" },
+                { value: "correos", label: "Correos electrónicos" },
+                {
+                  value: "apps-mensajeria",
+                  label: "Apps de mensajería (Ej: WhatsApp, Slack)",
+                },
+                { value: "otro", label: "Otro" },
+              ]}
             />
+            {formData.currentTools.includes("otro") && (
+              <FormField
+                label="Otro (especifica)"
+                name="currentToolsOther"
+                value={formData.currentToolsOther}
+                onChange={(value) =>
+                  updateFormData({ currentToolsOther: value as string })
+                }
+                error={errors.currentToolsOther}
+                placeholder="Especifica otra herramienta..."
+                required
+              />
+            )}
+
             <FormField
-              label="¿Existen puntos de entrada de datos manuales o traspasos entre sistemas?"
-              name="manualDataEntry"
-              type="textarea"
-              value={formData.manualDataEntry}
-              onChange={(value) => updateFormData({ manualDataEntry: value })}
-              placeholder="Describe dónde ocurren entradas manuales de datos..."
+              label="¿Hay tareas que haces manualmente y te gustaría automatizar?"
+              name="manualTasks"
+              type="radio"
+              value={formData.manualTasks}
+              onChange={(value) =>
+                updateFormData({ manualTasks: value as string })
+              }
+              error={errors.manualTasks}
+              required
+              options={[
+                { value: "si", label: "Sí" },
+                { value: "no", label: "No" },
+              ]}
             />
+            {formData.manualTasks === "si" && (
+              <FormField
+                label="Describe brevemente"
+                name="manualTasksDescription"
+                type="textarea"
+                value={formData.manualTasksDescription}
+                onChange={(value) =>
+                  updateFormData({ manualTasksDescription: value as string })
+                }
+                error={errors.manualTasksDescription}
+                placeholder="Ej: Paso datos del formulario web a una hoja de Excel."
+                required
+              />
+            )}
+
             <FormField
-              label="¿Cómo haces seguimiento del progreso o desempeño de estos procesos?"
-              name="progressTracking"
-              type="textarea"
-              value={formData.progressTracking}
-              onChange={(value) => updateFormData({ progressTracking: value })}
-              placeholder="Describe cómo monitoreas el progreso..."
+              label="¿Has probado antes alguna solución para automatizar tareas o procesos en tu empresa?"
+              name="previousAutomation"
+              type="radio"
+              value={formData.previousAutomation}
+              onChange={(value) =>
+                updateFormData({ previousAutomation: value as string })
+              }
+              error={errors.previousAutomation}
+              required
+              options={[
+                {
+                  value: "si-funciono",
+                  label: "Sí, lo hemos intentado y funcionó bien",
+                },
+                {
+                  value: "si-no-funciono",
+                  label: "Sí, lo intentamos pero no salió como esperábamos",
+                },
+                {
+                  value: "no-interesados",
+                  label: "No, pero estamos interesados",
+                },
+                {
+                  value: "no-considerado",
+                  label: "No, y no lo habíamos considerado",
+                },
+                { value: "no-seguro", label: "No estoy seguro" },
+              ]}
             />
           </FormStep>
         );
 
       case 3:
         return (
-          <FormStep title="Aspectos Técnicos e Integración" icon="🛠️">
+          <FormStep title="Nivel técnico y operatividad" icon="🧠">
             <FormField
-              label="¿Utilizas actualmente herramientas de automatización como Zapier, Make o n8n?"
-              name="currentAutomationTools"
+              label="¿Sabes si los programas o plataformas que usas pueden conectarse con otros sistemas para compartir datos automáticamente?"
+              name="systemIntegrations"
               type="radio"
-              value={formData.currentAutomationTools}
+              value={formData.systemIntegrations}
               onChange={(value) =>
-                updateFormData({ currentAutomationTools: value })
+                updateFormData({ systemIntegrations: value as string })
               }
+              error={errors.systemIntegrations}
+              required
               options={[
-                { value: "si-zapier", label: "Sí, uso Zapier" },
-                { value: "si-make", label: "Sí, uso Make (Integromat)" },
-                { value: "si-n8n", label: "Sí, uso n8n" },
-                { value: "si-otras", label: "Sí, uso otras herramientas" },
-                { value: "no", label: "No, no uso ninguna" },
+                { value: "si-api", label: "Sí, permiten conexiones (API)" },
+                {
+                  value: "si-webhooks",
+                  label: "Sí, envían datos automáticamente (Webhooks)",
+                },
+                { value: "si-ambos", label: "Sí, ambas cosas" },
+                { value: "no-seguro", label: "No estoy seguro" },
+                { value: "no", label: "No, no se pueden conectar" },
               ]}
             />
+
             <FormField
-              label="¿Tus herramientas actuales permiten integraciones vía API o Webhooks?"
-              name="apiIntegrations"
-              type="radio"
-              value={formData.apiIntegrations}
-              onChange={(value) => updateFormData({ apiIntegrations: value })}
-              options={[
-                { value: "si-api", label: "Sí, tienen API" },
-                { value: "si-webhooks", label: "Sí, soportan webhooks" },
-                { value: "si-ambos", label: "Sí, ambos" },
-                { value: "no-se", label: "No lo sé" },
-                { value: "no", label: "No" },
-              ]}
-            />
-            <FormField
-              label="¿Tus sistemas están en la nube, son locales (on-premise), o una combinación de ambos?"
+              label="¿Tus programas funcionan por internet (en la nube) o están instalados en computadoras o servidores propios?"
               name="systemArchitecture"
               type="radio"
               value={formData.systemArchitecture}
               onChange={(value) =>
-                updateFormData({ systemArchitecture: value })
+                updateFormData({ systemArchitecture: value as string })
               }
+              error={errors.systemArchitecture}
+              required
               options={[
-                { value: "nube", label: "Completamente en la nube" },
-                { value: "local", label: "Completamente local (on-premise)" },
-                { value: "hibrido", label: "Combinación híbrida" },
-                { value: "no-se", label: "No estoy seguro" },
+                { value: "nube", label: "Por internet (en la nube)" },
+                {
+                  value: "local",
+                  label: "Están instalados en computadoras/servidores propios",
+                },
+                { value: "mixto", label: "Es una mezcla de ambos" },
+                { value: "no-seguro", label: "No estoy seguro" },
               ]}
             />
+
             <FormField
-              label="¿Cuentas con desarrolladores internos o equipo de TI que participe en la gestión de procesos?"
-              name="internalDevelopers"
+              label="¿Tienes personas en tu equipo que entienden de tecnología o sistemas?"
+              name="technicalTeam"
               type="radio"
-              value={formData.internalDevelopers}
+              value={formData.technicalTeam}
               onChange={(value) =>
-                updateFormData({ internalDevelopers: value })
+                updateFormData({ technicalTeam: value as string })
               }
+              error={errors.technicalTeam}
+              required
               options={[
                 {
-                  value: "si-desarrolladores",
-                  label: "Sí, tenemos desarrolladores",
+                  value: "desarrolladores",
+                  label: "Sí, hay desarrolladores (programadores)",
                 },
-                { value: "si-ti", label: "Sí, tenemos equipo de TI" },
-                { value: "si-ambos", label: "Sí, ambos" },
-                { value: "externo", label: "Solo soporte externo" },
-                { value: "no", label: "No tenemos" },
+                {
+                  value: "equipo-ti",
+                  label: "Sí, tenemos equipo de sistemas/TI",
+                },
+                { value: "ambos", label: "Sí, ambos" },
+                { value: "ayuda-externa", label: "Solo tenemos ayuda externa" },
+                { value: "nadie", label: "No tenemos a nadie técnico" },
+              ]}
+            />
+
+            <FormField
+              label="¿Tienes alguna preocupación sobre temas como seguridad de datos, privacidad o cumplimiento de normas (como protección de datos)?"
+              name="securityConcerns"
+              type="radio"
+              value={formData.securityConcerns}
+              onChange={(value) =>
+                updateFormData({ securityConcerns: value as string })
+              }
+              error={errors.securityConcerns}
+              required
+              options={[
+                {
+                  value: "importante",
+                  label: "Sí, es un tema importante para nosotros",
+                },
+                {
+                  value: "interesa",
+                  label: "No especialmente, pero nos interesa hacerlo bien",
+                },
+                {
+                  value: "no-preocupa",
+                  label: "No, no es algo que nos preocupe mucho",
+                },
+                { value: "no-seguro", label: "No estoy seguro" },
               ]}
             />
           </FormStep>
@@ -263,85 +642,36 @@ export default function FormularioPage() {
 
       case 4:
         return (
-          <FormStep title="Puntos de Dolor y Métricas" icon="📊">
+          <FormStep title="Prioridad y etapa del proyecto" icon="📅">
             <FormField
-              label="¿Cuáles son los errores o cuellos de botella más frecuentes en tus procesos actuales?"
-              name="commonErrors"
-              type="textarea"
-              value={formData.commonErrors}
-              onChange={(value) => updateFormData({ commonErrors: value })}
-              placeholder="Describe los principales problemas que enfrentas..."
-            />
-            <FormField
-              label="¿Tienes métricas sobre tiempo, costos o tasas de error de estos flujos?"
-              name="performanceMetrics"
-              type="textarea"
-              value={formData.performanceMetrics}
-              onChange={(value) =>
-                updateFormData({ performanceMetrics: value })
-              }
-              placeholder="Ej: Promedio 2 horas por proceso, 5% de errores, etc."
-            />
-            <FormField
-              label="¿Con qué frecuencia necesitas modificar o adaptar tus flujos de trabajo?"
-              name="workflowChanges"
+              label="¿Qué tan urgente es para ti resolver esto?"
+              name="urgency"
               type="radio"
-              value={formData.workflowChanges}
-              onChange={(value) => updateFormData({ workflowChanges: value })}
+              value={formData.urgency}
+              onChange={(value) => updateFormData({ urgency: value as string })}
+              error={errors.urgency}
+              required
               options={[
-                { value: "diario", label: "Diariamente" },
-                { value: "semanal", label: "Semanalmente" },
-                { value: "mensual", label: "Mensualmente" },
-                { value: "trimestral", label: "Trimestralmente" },
-                { value: "rara-vez", label: "Rara vez" },
+                { value: "muy-urgente", label: "Muy urgente" },
+                { value: "pronto", label: "Me gustaría resolverlo pronto" },
+                {
+                  value: "importante-no-urgente",
+                  label: "Es importante, pero no urgente",
+                },
+                { value: "explorando", label: "Solo estoy explorando" },
               ]}
             />
-          </FormStep>
-        );
 
-      case 5:
-        return (
-          <FormStep title="Resultados Deseados" icon="🧩">
-            <FormField
-              label="¿Cómo se vería para ti una implementación de automatización exitosa?"
-              name="successfulImplementation"
-              type="textarea"
-              value={formData.successfulImplementation}
-              onChange={(value) =>
-                updateFormData({ successfulImplementation: value })
-              }
-              placeholder="Describe tu visión de éxito..."
-            />
-            <FormField
-              label="¿Hay tareas que te gustaría eliminar por completo de la responsabilidad de tu equipo?"
-              name="tasksToEliminate"
-              type="textarea"
-              value={formData.tasksToEliminate}
-              onChange={(value) => updateFormData({ tasksToEliminate: value })}
-              placeholder="Lista las tareas que prefieres automatizar completamente..."
-            />
-            <FormField
-              label="¿Qué tipo de informes o paneles (dashboards) serían útiles para ti?"
-              name="reportsAndDashboards"
-              type="textarea"
-              value={formData.reportsAndDashboards}
-              onChange={(value) =>
-                updateFormData({ reportsAndDashboards: value })
-              }
-              placeholder="Describe qué información te gustaría visualizar..."
-            />
-          </FormStep>
-        );
-
-      case 6:
-        return (
-          <FormStep title="Plazos y Presupuesto" icon="📆">
             <FormField
               label="¿Cuándo te gustaría iniciar este proyecto?"
               name="projectTimeline"
               type="radio"
               value={formData.projectTimeline}
-              onChange={(value) => updateFormData({ projectTimeline: value })}
+              onChange={(value) =>
+                updateFormData({ projectTimeline: value as string })
+              }
+              error={errors.projectTimeline}
+              required
               options={[
                 { value: "inmediatamente", label: "Inmediatamente" },
                 { value: "1-mes", label: "En el próximo mes" },
@@ -353,108 +683,52 @@ export default function FormularioPage() {
                 },
               ]}
             />
-            <FormField
-              label="¿Tienes un presupuesto asignado para automatización o mejora de procesos?"
-              name="assignedBudget"
-              type="radio"
-              value={formData.assignedBudget}
-              onChange={(value) => updateFormData({ assignedBudget: value })}
-              options={[
-                { value: "menos-1000", label: "Menos de €1,000" },
-                { value: "1000-5000", label: "€1,000 - €5,000" },
-                { value: "5000-15000", label: "€5,000 - €15,000" },
-                { value: "15000-50000", label: "€15,000 - €50,000" },
-                { value: "mas-50000", label: "Más de €50,000" },
-                {
-                  value: "sin-presupuesto",
-                  label: "Aún no tengo presupuesto definido",
-                },
-              ]}
-            />
           </FormStep>
         );
 
-      case 7:
+      case 5:
         return (
-          <FormStep title="Riesgos y Preocupaciones" icon="🚧">
+          <FormStep title="Tipo de servicio ideal" icon="🤝">
             <FormField
-              label="¿Has intentado automatizar procesos antes? Si es así, ¿qué funcionó y qué no?"
-              name="previousAutomation"
-              type="textarea"
-              value={formData.previousAutomation}
-              onChange={(value) =>
-                updateFormData({ previousAutomation: value })
-              }
-              placeholder="Comparte tu experiencia previa con automatización..."
-            />
-            <FormField
-              label="¿Existen preocupaciones sobre privacidad, seguridad o cumplimiento normativo?"
-              name="securityConcerns"
-              type="textarea"
-              value={formData.securityConcerns}
-              onChange={(value) => updateFormData({ securityConcerns: value })}
-              placeholder="Ej: GDPR, HIPAA, ISO 27001, etc."
-            />
-          </FormStep>
-        );
-
-      case 8:
-        return (
-          <FormStep title="Compatibilidad y Enfoque de Colaboración" icon="🤝">
-            <FormField
-              label="¿Prefieres una configuración única o un servicio continuo de soporte y optimización?"
+              label="¿Prefieres que solo te dejemos todo listo, o te interesa contar con soporte y mejoras continuas?"
               name="servicePreference"
               type="radio"
               value={formData.servicePreference}
-              onChange={(value) => updateFormData({ servicePreference: value })}
+              onChange={(value) =>
+                updateFormData({ servicePreference: value as string })
+              }
+              error={errors.servicePreference}
+              required
               options={[
-                { value: "configuracion-unica", label: "Configuración única" },
+                {
+                  value: "configuracion-inicial",
+                  label: "Solo quiero una configuración inicial",
+                },
                 {
                   value: "soporte-continuo",
-                  label: "Servicio continuo de soporte",
+                  label: "Me interesa tener soporte y ajustes continuos",
                 },
-                { value: "hibrido", label: "Combinación de ambos" },
-                { value: "no-seguro", label: "No estoy seguro" },
+                { value: "mixto", label: "Quiero una mezcla de ambos" },
+                { value: "no-claro", label: "Aún no lo tengo claro" },
               ]}
             />
-            <FormField
-              label="¿Con qué frecuencia te gustaría revisar el desempeño y realizar ajustes a la automatización?"
-              name="reviewFrequency"
-              type="radio"
-              value={formData.reviewFrequency}
-              onChange={(value) => updateFormData({ reviewFrequency: value })}
-              options={[
-                { value: "semanal", label: "Semanalmente" },
-                { value: "mensual", label: "Mensualmente" },
-                { value: "trimestral", label: "Trimestralmente" },
-                { value: "semestral", label: "Semestralmente" },
-                { value: "anual", label: "Anualmente" },
-              ]}
-            />
-            <FormField
-              label="¿Estás abierto a usar soluciones open-source o autoalojadas como n8n, o prefieres plataformas SaaS completamente gestionadas?"
-              name="solutionPreference"
-              type="radio"
-              value={formData.solutionPreference}
-              onChange={(value) =>
-                updateFormData({ solutionPreference: value })
-              }
-              options={[
-                {
-                  value: "open-source",
-                  label: "Prefiero open-source/autoalojadas",
-                },
-                { value: "saas", label: "Prefiero SaaS gestionadas" },
-                {
-                  value: "cualquiera",
-                  label: "Estoy abierto a cualquier opción",
-                },
-                {
-                  value: "no-seguro",
-                  label: "No estoy seguro de la diferencia",
-                },
-              ]}
-            />
+
+            <div className="mt-8">
+              <h3 className="text-xl font-bold text-primary mb-4">
+                ✍️ Comentarios finales
+              </h3>
+              <FormField
+                label="¿Hay algo más que te gustaría contarnos o alguna necesidad que no hayamos cubierto?"
+                name="finalComments"
+                type="textarea"
+                value={formData.finalComments}
+                onChange={(value) =>
+                  updateFormData({ finalComments: value as string })
+                }
+                placeholder="Comparte cualquier información adicional que consideres relevante..."
+                rows={4}
+              />
+            </div>
 
             {/* Honeypot field for spam protection - hidden from users */}
             <div style={{ display: "none" }}>

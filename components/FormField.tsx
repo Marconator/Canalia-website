@@ -3,9 +3,9 @@ import React from "react";
 interface FormFieldProps {
   label: string;
   name: string;
-  type?: "text" | "email" | "textarea" | "select" | "radio";
-  value: string;
-  onChange: (value: string) => void;
+  type?: "text" | "email" | "textarea" | "select" | "radio" | "checkbox";
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   error?: string;
   placeholder?: string;
   required?: boolean;
@@ -81,6 +81,35 @@ export function FormField({
                   onChange={(e) => onChange(e.target.value)}
                   className="w-4 h-4 text-secondary focus:ring-secondary"
                   required={required}
+                />
+                <span className="text-gray-700">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        );
+
+      case "checkbox":
+        return (
+          <div className="space-y-2">
+            {options.map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center space-x-3 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  name={name}
+                  value={option.value}
+                  checked={Array.isArray(value) && value.includes(option.value)}
+                  onChange={(e) => {
+                    const currentValues = Array.isArray(value) ? value : [];
+                    if (e.target.checked) {
+                      onChange([...currentValues, option.value]);
+                    } else {
+                      onChange(currentValues.filter((v) => v !== option.value));
+                    }
+                  }}
+                  className="w-4 h-4 text-secondary focus:ring-secondary rounded"
                 />
                 <span className="text-gray-700">{option.label}</span>
               </label>

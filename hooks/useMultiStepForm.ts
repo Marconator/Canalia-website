@@ -3,78 +3,64 @@ import { useState } from "react";
 export interface FormData {
   // Datos Generales
   businessName: string;
+  contactName: string;
   contactEmail: string;
 
-  // Descubrimiento General
-  timeConsumingProcesses: string;
-  repetitiveTasks: string;
-  automationGoal: string;
+  // Tu realidad actual
+  businessAreas: string[];
+  businessAreasOther: string;
+  repetitiveTasks: string[];
+  repetitiveTasksOther: string;
+  automationGoal: string[];
+  automationGoalOther: string;
 
-  // Análisis del Flujo de Trabajo Actual
-  typicalProcess: string;
-  involvedRoles: string;
-  currentTools: string;
-  manualDataEntry: string;
-  progressTracking: string;
-
-  // Aspectos Técnicos e Integración
-  currentAutomationTools: string;
-  apiIntegrations: string;
-  systemArchitecture: string;
-  internalDevelopers: string;
-
-  // Puntos de Dolor y Métricas
-  commonErrors: string;
-  performanceMetrics: string;
-  workflowChanges: string;
-
-  // Resultados Deseados
-  successfulImplementation: string;
-  tasksToEliminate: string;
-  reportsAndDashboards: string;
-
-  // Plazos y Presupuesto
-  projectTimeline: string;
-  assignedBudget: string;
-
-  // Riesgos y Preocupaciones
+  // Cómo trabajas hoy
+  currentTools: string[];
+  currentToolsOther: string;
+  manualTasks: string;
+  manualTasksDescription: string;
   previousAutomation: string;
+
+  // Nivel técnico y operatividad
+  systemIntegrations: string;
+  systemArchitecture: string;
+  technicalTeam: string;
   securityConcerns: string;
 
-  // Compatibilidad y Enfoque de Colaboración
+  // Prioridad y etapa del proyecto
+  urgency: string;
+  projectTimeline: string;
+
+  // Tipo de servicio ideal
   servicePreference: string;
-  reviewFrequency: string;
-  solutionPreference: string;
+
+  // Comentarios finales (opcional)
+  finalComments: string;
 }
 
 const initialFormData: FormData = {
   businessName: "",
+  contactName: "",
   contactEmail: "",
-  timeConsumingProcesses: "",
-  repetitiveTasks: "",
-  automationGoal: "",
-  typicalProcess: "",
-  involvedRoles: "",
-  currentTools: "",
-  manualDataEntry: "",
-  progressTracking: "",
-  currentAutomationTools: "",
-  apiIntegrations: "",
-  systemArchitecture: "",
-  internalDevelopers: "",
-  commonErrors: "",
-  performanceMetrics: "",
-  workflowChanges: "",
-  successfulImplementation: "",
-  tasksToEliminate: "",
-  reportsAndDashboards: "",
-  projectTimeline: "",
-  assignedBudget: "",
+  businessAreas: [],
+  businessAreasOther: "",
+  repetitiveTasks: [],
+  repetitiveTasksOther: "",
+  automationGoal: [],
+  automationGoalOther: "",
+  currentTools: [],
+  currentToolsOther: "",
+  manualTasks: "",
+  manualTasksDescription: "",
   previousAutomation: "",
+  systemIntegrations: "",
+  systemArchitecture: "",
+  technicalTeam: "",
   securityConcerns: "",
+  urgency: "",
+  projectTimeline: "",
   servicePreference: "",
-  reviewFrequency: "",
-  solutionPreference: "",
+  finalComments: "",
 };
 
 export function useMultiStepForm() {
@@ -82,7 +68,7 @@ export function useMultiStepForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const totalSteps = 9;
+  const totalSteps = 6;
 
   const updateFormData = (data: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -114,24 +100,101 @@ export function useMultiStepForm() {
         if (!formData.businessName.trim()) {
           newErrors.businessName = "El nombre del negocio es requerido";
         }
+        if (!formData.contactName.trim()) {
+          newErrors.contactName = "El nombre de contacto es requerido";
+        }
         if (!formData.contactEmail.trim()) {
           newErrors.contactEmail = "El correo de contacto es requerido";
         } else if (!/\S+@\S+\.\S+/.test(formData.contactEmail)) {
           newErrors.contactEmail = "El correo no tiene un formato válido";
         }
         break;
-      case 1: // Descubrimiento General
-        if (!formData.timeConsumingProcesses.trim()) {
-          newErrors.timeConsumingProcesses = "Este campo es requerido";
+
+      case 1: // Tu realidad actual
+        if (!formData.businessAreas.length) {
+          newErrors.businessAreas = "Selecciona al menos una área";
         }
-        if (!formData.repetitiveTasks.trim()) {
-          newErrors.repetitiveTasks = "Este campo es requerido";
+        if (
+          formData.businessAreas.includes("otro") &&
+          !formData.businessAreasOther.trim()
+        ) {
+          newErrors.businessAreasOther = "Especifica el área";
         }
-        if (!formData.automationGoal.trim()) {
-          newErrors.automationGoal = "Este campo es requerido";
+        if (!formData.repetitiveTasks.length) {
+          newErrors.repetitiveTasks = "Selecciona al menos una tarea";
+        }
+        if (
+          formData.repetitiveTasks.includes("otro") &&
+          !formData.repetitiveTasksOther.trim()
+        ) {
+          newErrors.repetitiveTasksOther = "Especifica la tarea";
+        }
+        if (!formData.automationGoal.length) {
+          newErrors.automationGoal = "Selecciona al menos un objetivo";
+        }
+        if (
+          formData.automationGoal.includes("otro") &&
+          !formData.automationGoalOther.trim()
+        ) {
+          newErrors.automationGoalOther = "Especifica tu objetivo";
         }
         break;
-      // Add more validation cases as needed
+
+      case 2: // Cómo trabajas hoy
+        if (!formData.currentTools.length) {
+          newErrors.currentTools = "Selecciona al menos una herramienta";
+        }
+        if (
+          formData.currentTools.includes("otro") &&
+          !formData.currentToolsOther.trim()
+        ) {
+          newErrors.currentToolsOther = "Especifica la herramienta";
+        }
+        if (!formData.manualTasks.trim()) {
+          newErrors.manualTasks = "Este campo es requerido";
+        }
+        if (
+          formData.manualTasks === "si" &&
+          !formData.manualTasksDescription.trim()
+        ) {
+          newErrors.manualTasksDescription =
+            "Describe brevemente las tareas manuales";
+        }
+        if (!formData.previousAutomation.trim()) {
+          newErrors.previousAutomation = "Este campo es requerido";
+        }
+        break;
+
+      case 3: // Nivel técnico y operatividad
+        if (!formData.systemIntegrations.trim()) {
+          newErrors.systemIntegrations = "Este campo es requerido";
+        }
+        if (!formData.systemArchitecture.trim()) {
+          newErrors.systemArchitecture = "Este campo es requerido";
+        }
+        if (!formData.technicalTeam.trim()) {
+          newErrors.technicalTeam = "Este campo es requerido";
+        }
+        if (!formData.securityConcerns.trim()) {
+          newErrors.securityConcerns = "Este campo es requerido";
+        }
+        break;
+
+      case 4: // Prioridad y etapa del proyecto
+        if (!formData.urgency.trim()) {
+          newErrors.urgency = "Este campo es requerido";
+        }
+        if (!formData.projectTimeline.trim()) {
+          newErrors.projectTimeline = "Este campo es requerido";
+        }
+        break;
+
+      case 5: // Tipo de servicio ideal
+        if (!formData.servicePreference.trim()) {
+          newErrors.servicePreference = "Este campo es requerido";
+        }
+        // finalComments is optional, no validation needed
+        break;
     }
 
     setErrors(newErrors);
