@@ -174,6 +174,7 @@ export default function FormularioPage() {
                 onChange={(value) =>
                   updateFormData({ repetitiveTasksOther: value as string })
                 }
+                error={errors.repetitiveTasksOther}
                 placeholder="Especifica otra tarea..."
                 required
               />
