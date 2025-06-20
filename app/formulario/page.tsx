@@ -213,6 +213,7 @@ export default function FormularioPage() {
                 onChange={(value) =>
                   updateFormData({ automationGoalOther: value as string })
                 }
+                error={errors.automationGoalOther}
                 placeholder="Describe tu objetivo..."
                 required
               />
