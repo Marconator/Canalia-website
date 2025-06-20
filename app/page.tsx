@@ -372,6 +372,14 @@ export default function Home() {
 
             <div className="border-t border-gray-600 mt-8 pt-8 text-center text-gray-300">
               <p>&copy; 2024 Canalia. Todos los derechos reservados.</p>
+              <div className="mt-4">
+                <a
+                    href="/politica-de-privacidad"
+                    className="text-gray-300 hover:text-white transition-colors underline"
+                >
+                  Política de privacidad
+                </a>
+              </div>
             </div>
           </div>
         </footer>
