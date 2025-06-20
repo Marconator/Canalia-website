@@ -45,7 +45,6 @@ export default function FormularioPage() {
   const handleSubmit = async () => {
     // Honeypot spam protection - if filled, it's likely a bot
     if (honeypot.trim() !== "") {
-      console.log("Honeypot triggered - potential spam submission blocked");
       alert("Error al enviar el formulario. Por favor intenta de nuevo.");
       return;
     }
