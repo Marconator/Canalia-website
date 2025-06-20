@@ -111,25 +111,32 @@ export function useMultiStepForm() {
         break;
 
       case 1: // Tu realidad actual
+        if (!formData.businessAreas.length) {
+          newErrors.businessAreas = "Selecciona al menos una área";
+        }
         if (
-          !formData.businessAreas.length &&
+          formData.businessAreas.includes("otro") &&
           !formData.businessAreasOther.trim()
         ) {
-          newErrors.businessAreas =
-            "Selecciona al menos una área o especifica otra";
+          newErrors.businessAreasOther = "Especifica el área";
+        }
+        if (!formData.repetitiveTasks.length) {
+          newErrors.repetitiveTasks = "Selecciona al menos una tarea";
         }
         if (
-          !formData.repetitiveTasks.length &&
+          formData.repetitiveTasks.includes("otro") &&
           !formData.repetitiveTasksOther.trim()
         ) {
-          newErrors.repetitiveTasks =
-            "Selecciona al menos una tarea o especifica otra";
+          newErrors.repetitiveTasksOther = "Especifica la tarea";
+        }
+        if (!formData.automationGoal.trim()) {
+          newErrors.automationGoal = "Selecciona un objetivo";
         }
         if (
-          !formData.automationGoal.trim() &&
+          formData.automationGoal === "otro" &&
           !formData.automationGoalOther.trim()
         ) {
-          newErrors.automationGoal = "Selecciona un objetivo o especifica otro";
+          newErrors.automationGoalOther = "Especifica tu objetivo";
         }
         break;
 
