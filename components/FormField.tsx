@@ -88,6 +88,35 @@ export function FormField({
           </div>
         );
 
+      case "checkbox":
+        return (
+          <div className="space-y-2">
+            {options.map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center space-x-3 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  name={name}
+                  value={option.value}
+                  checked={Array.isArray(value) && value.includes(option.value)}
+                  onChange={(e) => {
+                    const currentValues = Array.isArray(value) ? value : [];
+                    if (e.target.checked) {
+                      onChange([...currentValues, option.value]);
+                    } else {
+                      onChange(currentValues.filter((v) => v !== option.value));
+                    }
+                  }}
+                  className="w-4 h-4 text-secondary focus:ring-secondary rounded"
+                />
+                <span className="text-gray-700">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        );
+
       default:
         return (
           <input
