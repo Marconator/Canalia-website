@@ -141,12 +141,14 @@ export function useMultiStepForm() {
         break;
 
       case 2: // Cómo trabajas hoy
+        if (!formData.currentTools.length) {
+          newErrors.currentTools = "Selecciona al menos una herramienta";
+        }
         if (
-          !formData.currentTools.length &&
+          formData.currentTools.includes("otro") &&
           !formData.currentToolsOther.trim()
         ) {
-          newErrors.currentTools =
-            "Selecciona al menos una herramienta o especifica otra";
+          newErrors.currentToolsOther = "Especifica la herramienta";
         }
         if (!formData.manualTasks.trim()) {
           newErrors.manualTasks = "Este campo es requerido";
