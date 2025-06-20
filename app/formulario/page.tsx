@@ -162,10 +162,10 @@ export default function FormularioPage() {
                 { value: "generar-reportes", label: "Generar reportes" },
                 { value: "crear-facturas", label: "Crear facturas" },
                 { value: "asignar-tareas", label: "Asignar tareas" },
+                { value: "otro", label: "Otro" },
               ]}
             />
-            {(formData.repetitiveTasks.includes("otro") ||
-              formData.repetitiveTasks.length === 0) && (
+            {formData.repetitiveTasks.includes("otro") && (
               <FormField
                 label="Otro (especifica)"
                 name="repetitiveTasksOther"
@@ -174,6 +174,7 @@ export default function FormularioPage() {
                   updateFormData({ repetitiveTasksOther: value as string })
                 }
                 placeholder="Especifica otra tarea..."
+                required
               />
             )}
 
