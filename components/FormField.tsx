@@ -3,9 +3,9 @@ import React from "react";
 interface FormFieldProps {
   label: string;
   name: string;
-  type?: "text" | "email" | "textarea" | "select" | "radio";
-  value: string;
-  onChange: (value: string) => void;
+  type?: "text" | "email" | "textarea" | "select" | "radio" | "checkbox";
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   error?: string;
   placeholder?: string;
   required?: boolean;
