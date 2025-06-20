@@ -183,10 +183,10 @@ export default function FormularioPage() {
             <FormField
               label="¿Qué te gustaría lograr al automatizar estos procesos?"
               name="automationGoal"
-              type="radio"
+              type="checkbox"
               value={formData.automationGoal}
               onChange={(value) =>
-                updateFormData({ automationGoal: value as string })
+                updateFormData({ automationGoal: value as string[] })
               }
               error={errors.automationGoal}
               required
@@ -205,7 +205,7 @@ export default function FormularioPage() {
                 { value: "otro", label: "Otro" },
               ]}
             />
-            {formData.automationGoal === "otro" && (
+            {formData.automationGoal.includes("otro") && (
               <FormField
                 label="Especifica tu objetivo"
                 name="automationGoalOther"
