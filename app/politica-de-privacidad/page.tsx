@@ -44,7 +44,7 @@ export default function PoliticaPrivacidad() {
                                     1. Información general
                                 </h2>
                                 <p>
-                                    Esta Política de Privacidad describe cómo Canalia ("nosotros", "nuestro" o
+                                    Esta Política de Privacidad describe cómo Wabot Solutions (Canalia) ("nosotros", "nuestro" o
                                     "Canalia"), con domicilio en Panamá, Ciudad de Panamá, recopila, utiliza y comparte
                                     su información personal cuando visita nuestro sitio web o utiliza nuestros
                                     servicios.
