@@ -130,10 +130,10 @@ export default function FormularioPage() {
                 { value: "soporte-cliente", label: "Soporte al cliente" },
                 { value: "produccion", label: "Producción" },
                 { value: "ventas", label: "Ventas" },
+                { value: "otro", label: "Otro" },
               ]}
             />
-            {(formData.businessAreas.includes("otro") ||
-              formData.businessAreas.length === 0) && (
+            {formData.businessAreas.includes("otro") && (
               <FormField
                 label="Otro (especifica)"
                 name="businessAreasOther"
@@ -142,6 +142,7 @@ export default function FormularioPage() {
                   updateFormData({ businessAreasOther: value as string })
                 }
                 placeholder="Especifica otra área..."
+                required
               />
             )}
 
