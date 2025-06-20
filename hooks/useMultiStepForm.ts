@@ -46,7 +46,7 @@ const initialFormData: FormData = {
   businessAreasOther: "",
   repetitiveTasks: [],
   repetitiveTasksOther: "",
-  automationGoal: "",
+  automationGoal: [],
   automationGoalOther: "",
   currentTools: [],
   currentToolsOther: "",
