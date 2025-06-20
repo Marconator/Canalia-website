@@ -45,7 +45,7 @@ export default function Home() {
                 </a>
               </nav>
               <a href="/formulario" className="btn-primary">
-                Quiero automatizarme
+                Comenzar
               </a>
             </div>
           </div>
