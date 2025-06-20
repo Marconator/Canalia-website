@@ -53,12 +53,27 @@ export default function FormularioPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const webhookUrl =
+        process.env.NEXT_PUBLIC_WEBHOOK_URL ||
+        "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
 
-      // Here you would typically send the data to your backend
-      console.log("Form data:", formData);
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          timestamp: new Date().toISOString(),
+          source: "website_form",
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log("Form data submitted successfully:", formData);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
