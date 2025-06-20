@@ -499,7 +499,7 @@ export default function FormularioPage() {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-primary mb-4">
-              ¡Formulario Enviado!
+              ¡Formulario enviado!
             </h2>
             <p className="text-xl text-gray-600 mb-8">
               Gracias por completar nuestro formulario de descubrimiento. Te
@@ -518,7 +518,7 @@ export default function FormularioPage() {
                 }}
                 className="btn-secondary"
               >
-                Enviar Otro Formulario
+                Rellenar otro formulario
               </button>
             </div>
           </div>
@@ -562,7 +562,7 @@ export default function FormularioPage() {
           {/* Page Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-primary mb-4">
-              Formulario de Descubrimiento
+              Formulario de descubrimiento
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Ayúdanos a entender mejor tu negocio y procesos actuales para
