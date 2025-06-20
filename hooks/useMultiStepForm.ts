@@ -11,7 +11,7 @@ export interface FormData {
   businessAreasOther: string;
   repetitiveTasks: string[];
   repetitiveTasksOther: string;
-  automationGoal: string;
+  automationGoal: string[];
   automationGoalOther: string;
 
   // Cómo trabajas hoy
