@@ -129,11 +129,11 @@ export function useMultiStepForm() {
         ) {
           newErrors.repetitiveTasksOther = "Especifica la tarea";
         }
-        if (!formData.automationGoal.trim()) {
-          newErrors.automationGoal = "Selecciona un objetivo";
+        if (!formData.automationGoal.length) {
+          newErrors.automationGoal = "Selecciona al menos un objetivo";
         }
         if (
-          formData.automationGoal === "otro" &&
+          formData.automationGoal.includes("otro") &&
           !formData.automationGoalOther.trim()
         ) {
           newErrors.automationGoalOther = "Especifica tu objetivo";
