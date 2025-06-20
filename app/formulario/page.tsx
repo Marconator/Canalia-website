@@ -39,6 +39,211 @@ export default function FormularioPage() {
     }
   };
 
+  const transformFormDataForSubmission = () => {
+    // Define option mappings for readable labels
+    const optionMappings = {
+      businessAreas: {
+        "gestion-clientes": "Gestión de clientes",
+        contabilidad: "Contabilidad",
+        "tareas-internas": "Tareas internas",
+        "soporte-cliente": "Soporte al cliente",
+        produccion: "Producción",
+        ventas: "Ventas",
+        otro: "Otro",
+      },
+      repetitiveTasks: {
+        "enviar-correos": "Enviar correos",
+        "agendar-citas": "Agendar citas",
+        "generar-reportes": "Generar reportes",
+        "crear-facturas": "Crear facturas",
+        "asignar-tareas": "Asignar tareas",
+        otro: "Otro",
+      },
+      automationGoal: {
+        "ahorrar-tiempo": "Ahorrar tiempo",
+        "reducir-errores": "Reducir errores",
+        "escalar-negocio": "Escalar el negocio",
+        "liberar-equipo": "Liberar al equipo para tareas estratégicas",
+        "mejorar-experiencia": "Mejorar experiencia del cliente",
+        otro: "Otro",
+      },
+      currentTools: {
+        crm: "CRM (Ej: HubSpot, Zoho)",
+        erp: "ERP (Ej: SAP, Odoo)",
+        "hojas-calculo": "Hojas de cálculo",
+        correos: "Correos electrónicos",
+        "apps-mensajeria": "Apps de mensajería (Ej: WhatsApp, Slack)",
+        otro: "Otro",
+      },
+      manualTasks: {
+        si: "Sí",
+        no: "No",
+      },
+      previousAutomation: {
+        "si-funciono": "Sí, lo hemos intentado y funcionó bien",
+        "si-no-funciono": "Sí, lo intentamos pero no salió como esperábamos",
+        "no-interesados": "No, pero estamos interesados",
+        "no-considerado": "No, y no lo habíamos considerado",
+        "no-seguro": "No estoy seguro",
+      },
+      systemIntegrations: {
+        "si-api": "Sí, permiten conexiones (API)",
+        "si-webhooks": "Sí, envían datos automáticamente (Webhooks)",
+        "si-ambos": "Sí, ambas cosas",
+        "no-seguro": "No estoy seguro",
+        no: "No, no se pueden conectar",
+      },
+      systemArchitecture: {
+        nube: "Por internet (en la nube)",
+        local: "Están instalados en computadoras/servidores propios",
+        mixto: "Es una mezcla de ambos",
+        "no-seguro": "No estoy seguro",
+      },
+      technicalTeam: {
+        desarrolladores: "Sí, hay desarrolladores (programadores)",
+        "equipo-ti": "Sí, tenemos equipo de sistemas/TI",
+        ambos: "Sí, ambos",
+        "ayuda-externa": "Solo tenemos ayuda externa",
+        nadie: "No tenemos a nadie técnico",
+      },
+      securityConcerns: {
+        importante: "Sí, es un tema importante para nosotros",
+        interesa: "No especialmente, pero nos interesa hacerlo bien",
+        "no-preocupa": "No, no es algo que nos preocupe mucho",
+        "no-seguro": "No estoy seguro",
+      },
+      urgency: {
+        "muy-urgente": "Muy urgente",
+        pronto: "Me gustaría resolverlo pronto",
+        "importante-no-urgente": "Es importante, pero no urgente",
+        explorando: "Solo estoy explorando",
+      },
+      projectTimeline: {
+        inmediatamente: "Inmediatamente",
+        "1-mes": "En el próximo mes",
+        "2-3-meses": "En 2-3 meses",
+        "6-meses": "En 6 meses",
+        explorando: "Solo estoy explorando opciones",
+      },
+      servicePreference: {
+        "configuracion-inicial": "Solo quiero una configuración inicial",
+        "soporte-continuo": "Me interesa tener soporte y ajustes continuos",
+        mixto: "Quiero una mezcla de ambos",
+        "no-claro": "Aún no lo tengo claro",
+      },
+    };
+
+    // Transform array fields with proper handling of "otro"
+    const transformArrayField = (
+      fieldName: string,
+      values: string[],
+      otherValue: string,
+    ) => {
+      const mappings = optionMappings[fieldName] || {};
+      const transformedValues = values.map((value) => mappings[value] || value);
+
+      // If "otro" is selected and there's a custom value, replace "Otro" with the custom text
+      if (values.includes("otro") && otherValue.trim()) {
+        const otroIndex = transformedValues.findIndex((v) => v === "Otro");
+        if (otroIndex !== -1) {
+          transformedValues[otroIndex] = `Otro: ${otherValue}`;
+        }
+      }
+
+      return transformedValues;
+    };
+
+    // Transform single value fields with "otro" handling
+    const transformSingleField = (
+      fieldName: string,
+      value: string,
+      otherValue: string,
+    ) => {
+      const mappings = optionMappings[fieldName] || {};
+      if (value === "otro" && otherValue.trim()) {
+        return `Otro: ${otherValue}`;
+      }
+      return mappings[value] || value;
+    };
+
+    return {
+      "Nombre del negocio": formData.businessName,
+      "Nombre de contacto": formData.contactName,
+      "Correo electrónico": formData.contactEmail,
+      "Áreas de negocio que consumen más tiempo": transformArrayField(
+        "businessAreas",
+        formData.businessAreas,
+        formData.businessAreasOther,
+      ),
+      "Tareas repetitivas frecuentes": transformArrayField(
+        "repetitiveTasks",
+        formData.repetitiveTasks,
+        formData.repetitiveTasksOther,
+      ),
+      "Objetivos de automatización": transformArrayField(
+        "automationGoal",
+        formData.automationGoal,
+        formData.automationGoalOther,
+      ),
+      "Herramientas actuales": transformArrayField(
+        "currentTools",
+        formData.currentTools,
+        formData.currentToolsOther,
+      ),
+      "¿Hay tareas manuales a automatizar?": transformSingleField(
+        "manualTasks",
+        formData.manualTasks,
+        "",
+      ),
+      "Descripción de tareas manuales":
+        formData.manualTasksDescription || "No aplica",
+      "Experiencia previa con automatización": transformSingleField(
+        "previousAutomation",
+        formData.previousAutomation,
+        "",
+      ),
+      "¿Los sistemas pueden conectarse automáticamente?": transformSingleField(
+        "systemIntegrations",
+        formData.systemIntegrations,
+        "",
+      ),
+      "Arquitectura de sistemas": transformSingleField(
+        "systemArchitecture",
+        formData.systemArchitecture,
+        "",
+      ),
+      "Equipo técnico disponible": transformSingleField(
+        "technicalTeam",
+        formData.technicalTeam,
+        "",
+      ),
+      "Preocupaciones de seguridad": transformSingleField(
+        "securityConcerns",
+        formData.securityConcerns,
+        "",
+      ),
+      "Urgencia del proyecto": transformSingleField(
+        "urgency",
+        formData.urgency,
+        "",
+      ),
+      "Cuándo iniciar el proyecto": transformSingleField(
+        "projectTimeline",
+        formData.projectTimeline,
+        "",
+      ),
+      "Preferencia de servicio": transformSingleField(
+        "servicePreference",
+        formData.servicePreference,
+        "",
+      ),
+      "Comentarios finales":
+        formData.finalComments || "Sin comentarios adicionales",
+      "Fecha de envío": new Date().toISOString(),
+      Fuente: "Formulario del sitio web",
+    };
+  };
+
   const handleSubmit = async () => {
     // Honeypot spam protection - if filled, it's likely a bot
     if (honeypot.trim() !== "") {
@@ -53,25 +258,25 @@ export default function FormularioPage() {
     setIsSubmitting(true);
 
     try {
-      const webhookUrl = "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
+      const webhookUrl =
+        process.env.NEXT_PUBLIC_WEBHOOK_URL ||
+        "https://n8n.canaliasolutions.com/webhook/05773de6-a2c3-4780-9557-24df73b92628";
+
+      const transformedData = transformFormDataForSubmission();
 
       const response = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-          source: "website_form",
-        }),
+        body: JSON.stringify(transformedData),
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log("Form data submitted successfully:", formData);
+      console.log("Form data submitted successfully:", transformedData);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
