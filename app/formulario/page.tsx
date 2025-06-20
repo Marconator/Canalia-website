@@ -254,6 +254,7 @@ export default function FormularioPage() {
                 onChange={(value) =>
                   updateFormData({ currentToolsOther: value as string })
                 }
+                error={errors.currentToolsOther}
                 placeholder="Especifica otra herramienta..."
                 required
               />
