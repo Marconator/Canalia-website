@@ -240,10 +240,10 @@ export default function FormularioPage() {
                   value: "apps-mensajeria",
                   label: "Apps de mensajería (Ej: WhatsApp, Slack)",
                 },
+                { value: "otro", label: "Otro" },
               ]}
             />
-            {(formData.currentTools.includes("otro") ||
-              formData.currentTools.length === 0) && (
+            {formData.currentTools.includes("otro") && (
               <FormField
                 label="Otro (especifica)"
                 name="currentToolsOther"
@@ -252,6 +252,7 @@ export default function FormularioPage() {
                   updateFormData({ currentToolsOther: value as string })
                 }
                 placeholder="Especifica otra herramienta..."
+                required
               />
             )}
 
