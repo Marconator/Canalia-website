@@ -144,18 +144,10 @@ export default function Home() {
 
               <div className="feature-card text-center">
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px"
+                       fill="#FFFFFF">
                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-                    />
+                        d="M440-120v-66.67h333.33V-484q0-121.46-85.38-206.06-85.38-84.61-207.95-84.61t-207.95 84.61q-85.38 84.6-85.38 206.06v244H160q-33 0-56.5-23.5T80-320v-80q0-21 10.5-39.5T120-469l3-53q8-68 39.5-126t79-101q47.5-43 109-67T480-840q68 0 129 24t109 66.5Q766-707 797-649t40 126l3 52q19 9 29.5 27t10.5 38v92q0 20-10.5 38T840-249v62.33q0 27.5-19.58 47.09Q800.83-120 773.33-120H440Zm-80.12-286.67q-14.21 0-23.71-9.61-9.5-9.62-9.5-23.84 0-14.21 9.61-23.71 9.62-9.5 23.84-9.5 14.21 0 23.71 9.61 9.5 9.62 9.5 23.84 0 14.21-9.61 23.71-9.62 9.5-23.84 9.5Zm240 0q-14.21 0-23.71-9.61-9.5-9.62-9.5-23.84 0-14.21 9.61-23.71 9.62-9.5 23.84-9.5 14.21 0 23.71 9.61 9.5 9.62 9.5 23.84 0 14.21-9.61 23.71-9.62 9.5-23.84 9.5ZM241-462q-7-106 64-182t177-76q87.67 0 152.83 57.17Q700-605.67 714-519q-89.67-1-164.17-49.67-74.5-48.66-115.02-129.33Q419-618 367.5-555.5T241-462Z"/>
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-primary mb-4">
@@ -180,7 +172,8 @@ export default function Home() {
                 </h2>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div
+                        className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <svg
                           className="w-5 h-5 text-white"
                           fill="none"
