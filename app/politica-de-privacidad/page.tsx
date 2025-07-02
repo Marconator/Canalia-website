@@ -10,7 +10,7 @@ export default function PoliticaPrivacidad() {
                         <Link href="/" className="flex items-center space-x-3">
                             <div className="w-12 h-12">
                                 <img
-                                    src="/logo_vectorized_no_text.svg"
+                                    src="/logo_vectorized_icon.svg"
                                     alt="Canalia Logo"
                                     className="h-full w-full object-contain"
                                 />

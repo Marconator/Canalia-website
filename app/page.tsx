@@ -8,7 +8,7 @@ export default function Home() {
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12">
                   <img
-                      src="/logo_vectorized_no_text.svg"
+                      src="/logo_vectorized_icon.svg"
                       alt="Canalia Logo"
                       className="h-full w-full object-contain"
                   />
@@ -327,9 +327,10 @@ export default function Home() {
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-10 h-10">
                     <img
-                        src="/logo_vectorized_no_text.svg"
+                        src="/logo_vectorized_icon.svg"
                         alt="Canalia Logo"
                         className="h-full w-full object-contain"
+
                     />
                   </div>
                   <div>
